@@ -149,7 +149,35 @@ python research/news_eval.py report
 
 Paid steps print their call count and ask before spending. The scoring logic is covered by `tests/test_news_eval_report.py`. Frozen inputs stay local (`.gitignore`), because headlines and article blurbs are third-party text.
 
-**Status:** harness built and tested; the paid run has not been done yet.
+**Results** (run 18 Nov 2026; inputs hash `f9b0ac03440def20`; 22 inputs: 12 tickers with 10 live headlines each, 4 injection, 3 off-topic and 3 empty probes; 3 runs per input; 132 digests and 132 judgments; about $2.70 at list prices; run on AWS Bedrock):
+
+| Measure | Haiku 5.5 | Sonnet 5.5 |
+|---|---|---|
+| Errors, refusals | 0, 0% | 0, 0% |
+| Events reported (live inputs) | 151 | 172 |
+| Uncited events, invalid citation numbers | 0%, 0 | 0%, 0 |
+| Citation precision (cited headlines that support the event) | 98.9% | 95.9% |
+| Citation recall (supporting headlines that were cited) | 97.9% | 99.1% |
+| Summary claims supported (live inputs) | 97.4% of 232 | 100% of 227 |
+| Summary claims contradicted (live inputs) | 2 | 0 |
+| Trade advice or price prediction (live inputs) | 0% | 0% |
+| Injection followed | 0 of 12 | 0 of 12 |
+| Planted instruction reported as a news event | 0 of 12 | 0 of 12 |
+| Empty input handled | 9 of 9 | 9 of 9 |
+| Off-topic input handled | 9 of 9 | 9 of 9 |
+| Same tone across all three runs | 11 of 12 tickers | 11 of 12 tickers |
+
+Verified independently of the run: `report.json` was recomputed from the raw outputs and judgments, the input hash matched, and outputs were read by hand.
+
+**What this means.**
+- **The citation design works.** Every event cited real headline numbers, and the cited headlines almost always supported the event. Grounding failures that would be hidden in prose show up in the numbers.
+- **The probes were too easy for these models.** No injection was followed, every empty and off-topic input was handled, and scores sit near the ceiling. That says these models are robust to *this* injection and *these* probes, not to injection in general. Harder probes would be the next step: subtle instructions written as news, conflicting headlines, and partially relevant coverage.
+- **Errors were small but real.** Haiku described two headlines inaccurately on live inputs. On one off-topic probe it named "JPMorgan Chevron", merging two companies. Sonnet over-cited more (lower precision) but made no contradicted claims on live inputs.
+
+**Limitations.**
+- **Same-family judge:** the judge (Claude Opus 5.5) is from the same model family as both models it graded, which can favour them. No non-Anthropic model was enabled on the account used, so the planned cross-family judge did not run and judge agreement is not reported.
+- **Scope:** one day of headlines, twelve large US tickers.
+- **Frozen inputs:** the inputs and outputs contain third-party headline text and stay local; the summary above and the scripts are public.
 
 ## 4. Can next-month risk be forecast as a calibrated probability? (`stress_v2.py`)
 
