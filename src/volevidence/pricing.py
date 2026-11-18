@@ -133,3 +133,69 @@ def greeks(S: float, K: float, T: float, r: float, sigma: float, kind: str, q: f
         vega=S * disc_q * root_t * pdf / 100.0,
         rho=rho / 100.0,
     )
+
+
+# ── American exercise ────────────────────────────────────────────────────────
+
+def american_price(S: float, K: float, T: float, r: float, sigma: float, kind: str,
+                   q: float = 0.0, steps: int = 300) -> float:
+    """
+    American option price on a Cox-Ross-Rubinstein binomial tree.
+
+    Uses a continuous dividend yield, an approximation for stocks that pay
+    discrete dividends. Converges to the European price when early exercise
+    is never optimal (a call with q = 0).
+    """
+    k = _check(kind)
+    if S <= 0 or K <= 0 or T <= 0 or sigma <= 0:
+        raise ValueError(f"invalid inputs: S={S}, K={K}, T={T}, sigma={sigma}")
+    dt = T / steps
+    up = math.exp(sigma * math.sqrt(dt))
+    down = 1.0 / up
+    growth = math.exp((r - q) * dt)
+    p_up = (growth - down) / (up - down)
+    if not 0.0 < p_up < 1.0:
+        raise ValueError("binomial probability out of range; increase steps")
+    disc = math.exp(-r * dt)
+    sign = 1.0 if k == "call" else -1.0
+    values = [max(sign * (S * up ** j * down ** (steps - j) - K), 0.0) for j in range(steps + 1)]
+    for n in range(steps - 1, -1, -1):
+        for j in range(n + 1):
+            cont = disc * (p_up * values[j + 1] + (1.0 - p_up) * values[j])
+            exercise = sign * (S * up ** j * down ** (n - j) - K)
+            values[j] = max(cont, exercise)
+    return values[0]
+
+
+def american_implied_vol(
+    target: float, S: float, K: float, T: float, r: float, kind: str,
+    q: float = 0.0, steps: int = 200, tol: float = 1e-6, max_iter: int = 60,
+) -> float | None:
+    """
+    Volatility that reproduces `target` under American exercise, by bisection.
+
+    Returns None when the price is at or below immediate-exercise value, where
+    no volatility is identifiable, or above the maximum the tree can produce.
+    """
+    k = _check(kind)
+    if target is None or target <= 0 or S <= 0 or K <= 0 or T <= 0:
+        return None
+    intrinsic = max((S - K) if k == "call" else (K - S), 0.0)
+    if target <= intrinsic + 1e-9:
+        return None
+    # The tree needs per-step volatility above per-step drift, or the up-probability leaves (0, 1).
+    lo = max(SIGMA_MIN, 2.0 * abs(r - q) * math.sqrt(T / steps) + 1e-4)
+    hi = SIGMA_MAX
+    if american_price(S, K, T, r, hi, kind, q, steps) < target:
+        return None
+    if american_price(S, K, T, r, lo, kind, q, steps) > target:
+        return None
+    for _ in range(max_iter):
+        mid = 0.5 * (lo + hi)
+        if american_price(S, K, T, r, mid, kind, q, steps) > target:
+            hi = mid
+        else:
+            lo = mid
+        if hi - lo < tol:
+            break
+    return 0.5 * (lo + hi)

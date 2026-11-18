@@ -1,0 +1,32 @@
+{
+  "run_utc": "2026-11-18T21:44:38+00:00",
+  "filters": {
+    "max_spread_pct_of_mid": 10.0,
+    "min_dte": 7,
+    "binomial_steps": 150
+  },
+  "usable_quotes": {
+    "contracts": 9412,
+    "share_of_two_sided_pct": 60.6,
+    "median_abs_gap_vol_pts": 1.671,
+    "share_gap_over_5_pts_pct": 20.55,
+    "itm_median_abs_gap": 4.307,
+    "otm_atm_median_abs_gap": 1.114
+  },
+  "below_european_floor": {
+    "contracts": 841,
+    "usable_quotes": 584,
+    "explained_by_american_exercise_pct": 0.0,
+    "explained_among_usable_quotes_pct": 0.0
+  },
+  "itm_sample": {
+    "contracts": 583,
+    "median_abs_gap_european_vol_pts": 4.221,
+    "median_abs_gap_american_vol_pts": 4.045,
+    "median_american_minus_european_vol_pts": -0.329,
+    "by_kind_median_premium_vol_pts": {
+      "call": 0.031,
+      "put": -2.907
+    }
+  }
+}

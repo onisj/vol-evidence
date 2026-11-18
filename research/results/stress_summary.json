@@ -1,0 +1,263 @@
+{
+  "run_utc": "2026-11-18T21:38:03+00:00",
+  "weights": {
+    "vix_level": 0.25,
+    "vix_term": 0.25,
+    "credit": 0.25,
+    "realized_vol": 0.25
+  },
+  "window": 252,
+  "horizon": 21,
+  "first_day": "2008-05-09",
+  "last_day": "2026-10-20",
+  "days": 4641,
+  "non_overlapping_samples": 221,
+  "base_rate_dd5_pct": 17.63,
+  "verdicts": {
+    "H1_sorting": true,
+    "H2_beyond_raw_vix_on_drawdown": false,
+    "H3_volatility_vs_raw_vix": false
+  },
+  "rank_regression_fwd_maxdd": {
+    "t_gauge": 0.21,
+    "t_raw_vix": 2.75
+  },
+  "rank_regression_fwd_vol": {
+    "t_gauge": -1.64,
+    "t_raw_vix": -9.92
+  },
+  "spearman_next_21d": {
+    "gauge": {
+      "fwd_maxdd": {
+        "spearman": 0.138,
+        "ci95": [
+          -0.015,
+          0.27
+        ]
+      },
+      "fwd_vol": {
+        "spearman": -0.435,
+        "ci95": [
+          -0.572,
+          -0.258
+        ]
+      },
+      "fwd_dd5": {
+        "spearman": -0.199,
+        "ci95": [
+          -0.314,
+          -0.064
+        ]
+      },
+      "fwd_ret": {
+        "spearman": -0.082,
+        "ci95": [
+          -0.226,
+          0.039
+        ]
+      }
+    },
+    "vix_percentile_input": {
+      "fwd_maxdd": {
+        "spearman": 0.148,
+        "ci95": [
+          0.019,
+          0.266
+        ]
+      },
+      "fwd_vol": {
+        "spearman": -0.429,
+        "ci95": [
+          -0.549,
+          -0.284
+        ]
+      },
+      "fwd_dd5": {
+        "spearman": -0.19,
+        "ci95": [
+          -0.301,
+          -0.057
+        ]
+      },
+      "fwd_ret": {
+        "spearman": -0.088,
+        "ci95": [
+          -0.215,
+          0.03
+        ]
+      }
+    },
+    "raw_vix": {
+      "fwd_maxdd": {
+        "spearman": 0.227,
+        "ci95": [
+          0.072,
+          0.352
+        ]
+      },
+      "fwd_vol": {
+        "spearman": -0.659,
+        "ci95": [
+          -0.754,
+          -0.523
+        ]
+      },
+      "fwd_dd5": {
+        "spearman": -0.232,
+        "ci95": [
+          -0.343,
+          -0.108
+        ]
+      },
+      "fwd_ret": {
+        "spearman": -0.177,
+        "ci95": [
+          -0.339,
+          -0.039
+        ]
+      }
+    }
+  },
+  "by_quintile": [
+    {
+      "quintile": "Q1 lowest",
+      "days": 931,
+      "gauge_min": 0.0,
+      "gauge_max": 32.27,
+      "p_dd5_pct": 33.73,
+      "mean_fwd_vol_pct": 26.87,
+      "mean_fwd_maxdd_pct": -4.81,
+      "mean_fwd_ret_pct": 1.44
+    },
+    {
+      "quintile": "Q2",
+      "days": 928,
+      "gauge_min": 32.37,
+      "gauge_max": 51.2,
+      "p_dd5_pct": 19.5,
+      "mean_fwd_vol_pct": 16.65,
+      "mean_fwd_maxdd_pct": -3.08,
+      "mean_fwd_ret_pct": 0.97
+    },
+    {
+      "quintile": "Q3",
+      "days": 933,
+      "gauge_min": 51.29,
+      "gauge_max": 66.04,
+      "p_dd5_pct": 13.93,
+      "mean_fwd_vol_pct": 13.19,
+      "mean_fwd_maxdd_pct": -2.33,
+      "mean_fwd_ret_pct": 0.89
+    },
+    {
+      "quintile": "Q4",
+      "days": 923,
+      "gauge_min": 66.14,
+      "gauge_max": 80.58,
+      "p_dd5_pct": 12.46,
+      "mean_fwd_vol_pct": 11.94,
+      "mean_fwd_maxdd_pct": -2.03,
+      "mean_fwd_ret_pct": 0.8
+    },
+    {
+      "quintile": "Q5 highest",
+      "days": 926,
+      "gauge_min": 80.68,
+      "gauge_max": 99.8,
+      "p_dd5_pct": 8.42,
+      "mean_fwd_vol_pct": 11.93,
+      "mean_fwd_maxdd_pct": -1.93,
+      "mean_fwd_ret_pct": 1.09
+    }
+  ],
+  "by_label": [
+    {
+      "label": "calm",
+      "days": 2230,
+      "p_dd5_pct": 10.94,
+      "mean_fwd_vol_pct": 12.09,
+      "mean_fwd_ret_pct": 0.89
+    },
+    {
+      "label": "normal",
+      "days": 1131,
+      "p_dd5_pct": 14.94,
+      "mean_fwd_vol_pct": 14.45,
+      "mean_fwd_ret_pct": 1.2
+    },
+    {
+      "label": "stressed",
+      "days": 1280,
+      "p_dd5_pct": 31.64,
+      "mean_fwd_vol_pct": 24.63,
+      "mean_fwd_ret_pct": 1.15
+    }
+  ],
+  "exploratory": {
+    "note": "Exploratory, not pre-registered. Correlations use non-overlapping 21-day samples.",
+    "next_month_vol_rank_correlation": {
+      "gauge (sign-flipped)": 0.455,
+      "raw_vix": 0.685,
+      "trailing_21d_realised_vol": 0.539,
+      "har_rv_forecast": 0.591
+    },
+    "calibration_by_label": [
+      {
+        "label": "calm",
+        "days": 2211,
+        "median_fwd_maxdd_pct": -1.34,
+        "worst5pct_fwd_maxdd_pct": -6.44,
+        "median_fwd_vol_pct": 11.1,
+        "p95_fwd_vol_pct": 20.75
+      },
+      {
+        "label": "normal",
+        "days": 1123,
+        "median_fwd_maxdd_pct": -1.42,
+        "worst5pct_fwd_maxdd_pct": -9.16,
+        "median_fwd_vol_pct": 12.71,
+        "p95_fwd_vol_pct": 28.53
+      },
+      {
+        "label": "stressed",
+        "days": 1280,
+        "median_fwd_maxdd_pct": -2.7,
+        "worst5pct_fwd_maxdd_pct": -16.73,
+        "median_fwd_vol_pct": 20.16,
+        "p95_fwd_vol_pct": 67.54
+      }
+    ],
+    "robustness_excluding_crises": {
+      "ex_2008_09": {
+        "days": 4432,
+        "p_dd5_lowest_vs_highest_quintile_pct": [
+          27.95,
+          8.36
+        ],
+        "rank_regression_fwd_maxdd": {
+          "t_gauge": 0.52,
+          "t_raw_vix": 1.14
+        },
+        "spearman_fwd_vol_gauge_vs_raw_vix": [
+          -0.392,
+          -0.606
+        ]
+      },
+      "ex_2020_covid": {
+        "days": 4547,
+        "p_dd5_lowest_vs_highest_quintile_pct": [
+          33.84,
+          8.24
+        ],
+        "rank_regression_fwd_maxdd": {
+          "t_gauge": 1.78,
+          "t_raw_vix": 2.09
+        },
+        "spearman_fwd_vol_gauge_vs_raw_vix": [
+          -0.467,
+          -0.665
+        ]
+      }
+    }
+  }
+}

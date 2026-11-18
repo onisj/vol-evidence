@@ -12,3 +12,5 @@ dist/
 .DS_Store
 # Third-party news text is kept local, not redistributed
 research/results/news_eval/
+# Raw vendor data (Cboe index levels, Yahoo quotes): regenerate locally with the scripts
+research/results/*.csv

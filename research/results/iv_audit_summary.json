@@ -1,0 +1,61 @@
+{
+  "run_utc": "2026-11-18T21:41:56+00:00",
+  "tickers": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "KO"
+  ],
+  "max_dte": 120,
+  "rate": 0.040613972702111464,
+  "two_sided_contracts": 15522,
+  "solved": 14637,
+  "unsolvable_pct": 5.7,
+  "unsolvable_breakdown": {
+    "below_floor": 841,
+    "no_solution": 43,
+    "above_cap": 1
+  },
+  "below_floor_put_share_pct": 38.4,
+  "median_abs_gap_vol_pts": 1.766,
+  "p90_abs_gap_vol_pts": 11.36,
+  "share_gap_over_2_pts_pct": 45.3,
+  "share_gap_over_5_pts_pct": 24.29,
+  "median_abs_vendor_price_err_pct": 6.54,
+  "tight_spread_median_abs_gap": 2.023,
+  "staleness": {
+    "contracts_with_last_trade_iv": 12885,
+    "median_abs_vendor_gap_vs_quote_iv": 1.582,
+    "median_abs_vendor_gap_vs_last_trade_iv": 1.915,
+    "vendor_closer_to_last_trade_pct": 34.3,
+    "by_last_trade_age": {
+      "traded within 1 day": {
+        "contracts": 10203,
+        "median_abs_gap_vs_quote_iv": 1.476,
+        "median_abs_gap_vs_last_trade_iv": 1.629
+      },
+      "1-5 days": {
+        "contracts": 1518,
+        "median_abs_gap_vs_quote_iv": 1.739,
+        "median_abs_gap_vs_last_trade_iv": 2.845
+      },
+      "over 5 days": {
+        "contracts": 1164,
+        "median_abs_gap_vs_quote_iv": 4.538,
+        "median_abs_gap_vs_last_trade_iv": 20.095
+      }
+    }
+  },
+  "by_ticker_median_abs_gap": {
+    "AAPL": 2.943,
+    "IWM": 1.453,
+    "KO": 1.752,
+    "MSFT": 2.114,
+    "NVDA": 3.508,
+    "QQQ": 1.862,
+    "SPY": 1.428
+  }
+}

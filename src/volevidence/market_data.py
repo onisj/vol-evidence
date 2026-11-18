@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 import math
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from functools import lru_cache
 
 import pandas as pd
@@ -37,6 +37,8 @@ class Quote:
     vendor_iv: float | None
     volume: float | None
     open_interest: float | None
+    last_trade: datetime | None = None
+    last_price: float | None = None
 
     @property
     def mid(self) -> float | None:
@@ -51,6 +53,18 @@ def _num(value) -> float | None:
     except (TypeError, ValueError):
         return None
     return None if math.isnan(x) else x
+
+
+def _timestamp(value) -> datetime | None:
+    if value is None:
+        return None
+    try:
+        ts = pd.Timestamp(value)
+    except (TypeError, ValueError):
+        return None
+    if pd.isna(ts):
+        return None
+    return (ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")).to_pydatetime()
 
 
 def dividend_yield_from_info(info: dict) -> float:
@@ -120,6 +134,8 @@ def chain(ticker: str, max_dte: int, today: date | None = None) -> list[Quote]:
                     bid=_num(row.get("bid")), ask=_num(row.get("ask")),
                     vendor_iv=_num(row.get("impliedVolatility")),
                     volume=_num(row.get("volume")), open_interest=_num(row.get("openInterest")),
+                    last_trade=_timestamp(row.get("lastTradeDate")),
+                    last_price=_num(row.get("lastPrice")),
                 ))
     return quotes
 
