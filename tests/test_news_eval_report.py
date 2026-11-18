@@ -70,4 +70,5 @@ def test_metrics_per_model_and_judge():
 
 
 def test_family():
-    assert ev.family("claude-opus-5-5") == "anthropic" and ev.family("gpt-4o") == "openai"
+    assert ev.family("claude-opus-5-5") == "anthropic" and ev.family("gpt-4o") == "other"
+    assert ev.family("bedrock/us.anthropic.claude-opus-5-5") == "anthropic"

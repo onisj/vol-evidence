@@ -133,11 +133,31 @@ class DigestError(RuntimeError):
     pass
 
 
-def digest_claude(ticker: str, headlines: list[Headline], model: str = DEFAULT_CLAUDE_MODEL) -> tuple[dict, dict]:
-    """Digest via the Anthropic SDK with JSON-schema structured output. Returns (digest, usage)."""
+BEDROCK_PREFIX = "bedrock/"
+
+
+def _claude_client(model: str):
+    """First-party client, or the Bedrock (Mantle) client for `bedrock/...` model names.
+
+    Bedrock credentials come from the AWS credential chain (AWS_PROFILE, AWS_REGION);
+    nothing is passed in code.
+    """
+    import os
+
     import anthropic
 
-    resp = anthropic.Anthropic().messages.create(
+    if model.startswith(BEDROCK_PREFIX):
+        return anthropic.AnthropicBedrockMantle(
+            aws_region=os.environ.get("AWS_REGION", "us-east-1"),
+            aws_profile=os.environ.get("AWS_PROFILE"),
+        ), model[len(BEDROCK_PREFIX):]
+    return anthropic.Anthropic(), model
+
+
+def digest_claude(ticker: str, headlines: list[Headline], model: str = DEFAULT_CLAUDE_MODEL) -> tuple[dict, dict]:
+    """Digest via the Anthropic SDK with JSON-schema structured output. Returns (digest, usage)."""
+    client, model = _claude_client(model)
+    resp = client.messages.create(
         model=model,
         max_tokens=4000,
         system=INSTRUCTIONS,
@@ -172,7 +192,7 @@ def digest_openai(ticker: str, headlines: list[Headline], model: str = DEFAULT_O
 
 
 def digest(ticker: str, headlines: list[Headline], model: str) -> tuple[dict, dict]:
-    if model.startswith("claude"):
+    if model.startswith("claude") or model.startswith(BEDROCK_PREFIX):
         return digest_claude(ticker, headlines, model)
     return digest_openai(ticker, headlines, model)
 

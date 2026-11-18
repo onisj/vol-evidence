@@ -75,3 +75,24 @@ def test_citation_check():
 def test_schema_and_instructions_forbid_advice():
     assert set(news.SCHEMA["required"]) == set(GOOD)
     assert "no advice" in news.INSTRUCTIONS and "ignore them" in news.INSTRUCTIONS
+
+
+def test_bedrock_model_names_use_the_mantle_client(monkeypatch):
+    built = {}
+
+    class Messages:
+        def create(self, **kw):
+            built["model"] = kw["model"]
+            return SimpleNamespace(content=[SimpleNamespace(type="text", text=json.dumps(GOOD))],
+                                   stop_reason="end_turn", usage=SimpleNamespace(input_tokens=1, output_tokens=1))
+
+    def mantle(**kw):
+        built["client_kwargs"] = kw
+        return SimpleNamespace(messages=Messages())
+
+    monkeypatch.setitem(sys.modules, "anthropic", SimpleNamespace(AnthropicBedrockMantle=mantle,
+                                                                 Anthropic=lambda **_: None))
+    monkeypatch.setenv("AWS_PROFILE", "research")
+    news.digest("X", H, "bedrock/us.anthropic.claude-haiku-5-5")
+    assert built["model"] == "us.anthropic.claude-haiku-5-5"
+    assert built["client_kwargs"] == {"aws_region": "us-east-1", "aws_profile": "research"}
