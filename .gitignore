@@ -14,3 +14,4 @@ dist/
 research/results/news_eval/
 # Raw vendor data (Cboe index levels, Yahoo quotes): regenerate locally with the scripts
 research/results/*.csv
+!research/results/forecast_ledger.csv
