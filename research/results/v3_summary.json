@@ -1,0 +1,267 @@
+{
+  "run_utc": "2026-11-18T22:32:30+00:00",
+  "preregistration": "research/PREREGISTRATION_V3.md",
+  "markets": {
+    "Nasdaq-100": {
+      "tickers": [
+        "^NDX",
+        "^VXN"
+      ],
+      "data_start": "2001-01-23",
+      "years_of_data": 25.8,
+      "oos_start": "2011-01-03",
+      "oos_end": "2026-10-20",
+      "models": {
+        "M0 climatology": {
+          "days": 3973,
+          "event_rate_pct": 22.88,
+          "brier": 0.18341,
+          "mean_pinball": 0.1234,
+          "calibration_in_the_large_pp": 6.4,
+          "interval_10_90_coverage_pct": 79.8
+        },
+        "M1 implied vol": {
+          "days": 3973,
+          "event_rate_pct": 22.88,
+          "brier": 0.16994,
+          "mean_pinball": 0.08296,
+          "calibration_in_the_large_pp": 0.08,
+          "interval_10_90_coverage_pct": 73.7
+        },
+        "M2 HAR": {
+          "days": 3973,
+          "event_rate_pct": 22.88,
+          "brier": 0.1706,
+          "mean_pinball": 0.09737,
+          "calibration_in_the_large_pp": 0.98,
+          "interval_10_90_coverage_pct": 71.2
+        },
+        "M3 implied vol + VRP": {
+          "days": 3973,
+          "event_rate_pct": 22.88,
+          "brier": 0.17186,
+          "mean_pinball": 0.08313,
+          "calibration_in_the_large_pp": 0.32,
+          "interval_10_90_coverage_pct": 73.5
+        }
+      },
+      "brier_skill_vs_climatology": {
+        "M0 climatology": 0.0,
+        "M1 implied vol": 0.0735,
+        "M2 HAR": 0.0699,
+        "M3 implied vol + VRP": 0.063
+      },
+      "M1_vs_M0": {
+        "brier": {
+          "improvement_pct": 7.35,
+          "diff_ci95": [
+            0.003014,
+            0.024138
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": 32.77,
+          "diff_ci95": [
+            0.030372,
+            0.052379
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        }
+      },
+      "M3_vs_M1": {
+        "brier": {
+          "improvement_pct": -1.13,
+          "diff_ci95": [
+            -0.006453,
+            0.000501
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        },
+        "pinball": {
+          "improvement_pct": -0.2,
+          "diff_ci95": [
+            -0.000609,
+            0.000153
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        }
+      },
+      "M1_vs_M2": {
+        "brier": {
+          "improvement_pct": 0.39,
+          "diff_ci95": [
+            -0.00429,
+            0.004956
+          ],
+          "ci_excludes_zero": false,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": 14.8,
+          "diff_ci95": [
+            0.008216,
+            0.019706
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        }
+      },
+      "verdicts": {
+        "R1_implied_vol_has_skill": true,
+        "R2_vrp_adds_nothing": true,
+        "R3_implied_beats_realised_for_vol_range": true
+      },
+      "R4_worst_year": {
+        "year": 2022,
+        "event_rate_pct": 64.5,
+        "brier_skill": {
+          "M1 implied vol": 0.1197,
+          "M2 HAR": 0.1854,
+          "M3 implied vol + VRP": 0.1163
+        }
+      }
+    },
+    "Russell 2000": {
+      "status": "not run",
+      "reason": "only 0.0 years of overlapping data"
+    },
+    "Emerging markets": {
+      "status": "not run",
+      "reason": "only 0.0 years of overlapping data"
+    },
+    "Gold": {
+      "tickers": [
+        "GLD",
+        "^GVZ"
+      ],
+      "data_start": "2008-06-03",
+      "years_of_data": 18.5,
+      "oos_start": "2018-01-02",
+      "oos_end": "2026-10-20",
+      "models": {
+        "M0 climatology": {
+          "days": 2212,
+          "event_rate_pct": 13.97,
+          "brier": 0.12458,
+          "mean_pinball": 0.10282,
+          "calibration_in_the_large_pp": 4.1,
+          "interval_10_90_coverage_pct": 75.7
+        },
+        "M1 implied vol": {
+          "days": 2212,
+          "event_rate_pct": 13.97,
+          "brier": 0.11161,
+          "mean_pinball": 0.07045,
+          "calibration_in_the_large_pp": 2.01,
+          "interval_10_90_coverage_pct": 75.7
+        },
+        "M2 HAR": {
+          "days": 2212,
+          "event_rate_pct": 13.97,
+          "brier": 0.11938,
+          "mean_pinball": 0.08163,
+          "calibration_in_the_large_pp": 3.26,
+          "interval_10_90_coverage_pct": 77.4
+        },
+        "M3 implied vol + VRP": {
+          "days": 2212,
+          "event_rate_pct": 13.97,
+          "brier": 0.11264,
+          "mean_pinball": 0.07093,
+          "calibration_in_the_large_pp": 2.06,
+          "interval_10_90_coverage_pct": 75.0
+        }
+      },
+      "brier_skill_vs_climatology": {
+        "M0 climatology": 0.0,
+        "M1 implied vol": 0.1041,
+        "M2 HAR": 0.0417,
+        "M3 implied vol + VRP": 0.0958
+      },
+      "M1_vs_M0": {
+        "brier": {
+          "improvement_pct": 10.41,
+          "diff_ci95": [
+            0.00358,
+            0.020454
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": 31.48,
+          "diff_ci95": [
+            0.017835,
+            0.04729
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        }
+      },
+      "M3_vs_M1": {
+        "brier": {
+          "improvement_pct": -0.93,
+          "diff_ci95": [
+            -0.002143,
+            -0.00024
+          ],
+          "ci_excludes_zero": true,
+          "better": false
+        },
+        "pinball": {
+          "improvement_pct": -0.68,
+          "diff_ci95": [
+            -0.001597,
+            0.000471
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        }
+      },
+      "M1_vs_M2": {
+        "brier": {
+          "improvement_pct": 6.51,
+          "diff_ci95": [
+            0.005388,
+            0.010209
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": 13.69,
+          "diff_ci95": [
+            0.005146,
+            0.018141
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        }
+      },
+      "verdicts": {
+        "R1_implied_vol_has_skill": true,
+        "R2_vrp_adds_nothing": true,
+        "R3_implied_beats_realised_for_vol_range": true
+      },
+      "R4_worst_year": {
+        "year": 2026,
+        "event_rate_pct": 52.2,
+        "brier_skill": {
+          "M1 implied vol": 0.185,
+          "M2 HAR": 0.155,
+          "M3 implied vol + VRP": 0.1782
+        }
+      }
+    }
+  },
+  "replication": {
+    "markets_run": 2,
+    "markets_where_R1_and_R2_hold": 2,
+    "replicated": false
+  }
+}

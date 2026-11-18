@@ -1,6 +1,6 @@
 # Research
 
-Four studies of numbers that options tools commonly show traders. Each script writes its raw data, a JSON summary and charts to `results/`, so every figure in the write-up traces to a file.
+Five studies of numbers that options tools commonly show traders. Each script writes its raw data, a JSON summary and charts to `results/`, so every figure in the write-up traces to a file.
 
 ```bash
 pip install -e ".[research,llm]"
@@ -197,3 +197,32 @@ For the volatility range, VIX was clearly best: its quantile loss was 12% lower 
 
 ![Reliability](results/v2_reliability.png)
 ![Skill by year](results/v2_skill_by_year.png)
+
+## 5. Does it hold in other markets, and forward in time? (`stress_v3.py`, `forecast_ledger.py`)
+
+Pre-registered in [PREREGISTRATION_V3.md](PREREGISTRATION_V3.md), committed and pushed before any v3 data was downloaded. The models and protocol are v2's, applied to markets not previously examined in this project, using each market's own implied-volatility index.
+
+**Pre-registered result.**
+- **Nasdaq-100** (VXN; out of sample 2011–2026) and **gold** (GVZ; 2018–2026) both ran, and R1, R2 and R3 held in both.
+- **Russell 2000 and emerging markets** did not run: their registered volatility series (`^RVX`, `^VXEEM`) are no longer served by yfinance.
+- **Replication: not established under the rule.** The rule needs R1 and R2 to hold in at least three markets; only two could run.
+
+**Deviation, reported separately** (`stress_v3_deviation.py`): the same two indexes from FRED (`RVXCLS`, `VXEEMCLS`), with identical models. This was written after the primary results were seen, so it does not change the verdict.
+
+| Market | Implied vol: drawdown-probability skill | Volatility-range loss vs base rate | VRP adds? | Implied beats HAR on volatility range? |
+|---|---|---|---|---|
+| S&P 500 (v2) | +6.9% | −35% | No | Yes (12%) |
+| Nasdaq-100 | +7.4% | −33% | No | Yes (15%) |
+| Gold | +10.4% | −31% | No (significantly worse) | Yes (14%) |
+| Emerging markets (deviation) | +1.7% | −23% | No | Yes (12%) |
+| Russell 2000 (deviation) | **−0.9% (no skill)** | −32% | No | Yes (14%) |
+
+**What this means.**
+- **Forecasting the volatility range replicates everywhere.** In all five markets, implied volatility cuts the volatility-quantile loss by 23–35% against the base rate and beats realised-volatility models.
+- **The variance risk premium never helped.** Five markets out of five.
+- **Forecasting the chance of a drawdown does not replicate cleanly.** It works for large caps and gold, barely for emerging markets, and not at all for small caps. A tool that shows "chance of a fall" should be validated market by market.
+- **Worst years were slow bear markets** (2022 for Nasdaq-100, Russell 2000 and emerging markets), and the models had positive skill in them, consistent with v2: they track risk that is already visible.
+
+![Skill by market](results/v3_skill_by_market.png)
+
+**Part B, forward ledger.** `forecast_ledger.py` appends the S&P 500 forecasts for each new close to `results/forecast_ledger.csv`, with no backfilling. The first entry, for the 18 November 2026 close, put the chance of a 5%+ drawdown by mid-December at 23.8% under the VIX model, against a 16.6% base rate. A verdict needs at least 120 resolved forecast days; `python research/forecast_ledger.py --score` reports progress.

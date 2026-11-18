@@ -41,7 +41,8 @@ def append_today() -> None:
     today = data.index[-1]
     ledger = pd.read_csv(LEDGER, parse_dates=["date"]) if LEDGER.exists() else pd.DataFrame()
     if not ledger.empty and ledger["date"].max() >= today:
-        sys.exit(f"ledger already has forecasts for {ledger['date'].max().date()}; nothing to add for {today.date()}")
+        print(f"ledger already has forecasts for {ledger['date'].max().date()}; nothing to add for {today.date()}")
+        return
     train = data.dropna(subset=["dd_event", "log_fwd_rv"])          # only rows whose window has closed
     test = data.loc[[today]]
     rows = []
