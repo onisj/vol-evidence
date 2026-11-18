@@ -4,6 +4,8 @@
 
 **Testing the numbers options tools show traders.** Retail options tools display implied volatility from a data feed, market "stress" or "risk-on" scores, and AI news summaries. This project checks them against data, with the methods, results and caveats in the open (raw vendor data is regenerated locally by the scripts, not redistributed).
 
+**Read the write-up: [ARTICLE.md](ARTICLE.md).** For a company-side study of the same stress-gauge question, see [Èrè Research](https://ere.markets/research/macro-gate-stress-score).
+
 | Question | Answer | Study |
 |---|---|---|
 | Is the vendor's implied volatility consistent with the actual quote? | **Near the money, roughly; in the money, often not.** Across 15,522 contracts, vendor IV sat a median 1.1 vol points from the quote-implied IV out of the money, but 5.0 points in the money, where half were off by more than 5. Early exercise, wide quotes and stale last trades were each tested and ruled out as the main cause. | [IV audit](research/README.md#2-how-far-is-vendor-implied-volatility-from-the-quote-iv_auditpy-iv_americanpy) |
