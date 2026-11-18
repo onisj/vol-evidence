@@ -1,6 +1,6 @@
 # Research
 
-Three studies of numbers that options tools commonly show traders. Each script writes its raw data, a JSON summary and charts to `results/`, so every figure in the write-up traces to a file.
+Four studies of numbers that options tools commonly show traders. Each script writes its raw data, a JSON summary and charts to `results/`, so every figure in the write-up traces to a file.
 
 ```bash
 pip install -e ".[research,llm]"
@@ -150,3 +150,50 @@ python research/news_eval.py report
 Paid steps print their call count and ask before spending. The scoring logic is covered by `tests/test_news_eval_report.py`. Frozen inputs stay local (`.gitignore`), because headlines and article blurbs are third-party text.
 
 **Status:** harness built and tested; the paid run has not been done yet.
+
+## 4. Can next-month risk be forecast as a calibrated probability? (`stress_v2.py`)
+
+Pre-registered in [PREREGISTRATION_V2.md](PREREGISTRATION_V2.md), committed and pushed before any v2 data was downloaded. Study 1 had few crises, ranks instead of forecasts, and no refitting; this study addresses all three.
+
+**Design.**
+- **Data:** S&P 500 and VIX from 1990, and Moody's Baa corporate spread over Treasuries (FRED `BAA10Y`).
+- **Targets:** the probability of a 5%+ drawdown within 21 trading days, and the 10th, 50th and 90th percentiles of next-month realised volatility.
+- **Models:** climatology (the base rate); VIX alone; HAR realised volatility; VIX plus the variance risk premium; and a six-input composite (VIX, realised volatility, variance risk premium, credit spread and its change).
+- **Protocol:** each model is refitted every year on all earlier data whose forward window had already closed, then forecasts the next year. That gives 26 years of out-of-sample forecasts, 6,740 days from 2000 to October 2026.
+- **Clean window:** 2000 to 2007, a period I had not looked at in either study, is reported separately as the cleanest test.
+
+**Verdicts.**
+
+| Hypothesis | 2000–2026 | 2000–2007 (unseen) |
+|---|---|---|
+| H1: VIX beats the base rate | **Supported.** Brier skill +6.9%; volatility-quantile loss 35% lower | **Supported.** +8.0%; 42% lower |
+| H2: the composite beats VIX by 2% or more | **Rejected.** Significantly *worse* on probabilities (−3.3%), no better on volatility | **Rejected** (−4.2%) |
+| H3: the variance risk premium adds 1% or more to VIX | **Rejected** (−1.1%, not significant) | **Rejected** (−0.3%) |
+| H4: VIX forecasts are calibrated within ±2 points, with 75–85% interval coverage | **Narrowly rejected.** Under-forecast by 2.3 points; coverage 76% | **Rejected.** Under-forecast by 5.8 points |
+| H5: second market | **Not run.** yfinance no longer serves VSTOXX (`^V2TX`), as the pre-registration allowed | |
+
+*Brier skill against the base rate, 2000–2026:*
+
+| Model | Skill |
+|---|---|
+| HAR realised volatility | +7.6% |
+| VIX | +6.9% |
+| VIX + variance risk premium | +5.8% |
+| Six-input composite | +3.8% |
+
+For the volatility range, VIX was clearly best: its quantile loss was 12% lower than HAR's, a significant difference.
+
+**What this means.**
+- **More inputs made forecasts worse.** Every input added to VIX lowered out-of-sample skill, and the full composite was the worst informed model. Across two studies, two designs and 26 years, the simplest signal wins.
+- **They react to visible risk; they don't anticipate shocks.** The biggest skill came in quiet years (2005, 2013, 2017) and in drawn-out bear markets once fear was already high: +14% in 2002 and +29 to +32% in 2008. Before sudden shocks, all three informed models did worse than the base rate: 2018 (−6% to −11%) and 2020 (−8% to −28%).
+- **High probabilities are overconfident.** Below about 35% the forecasts are roughly calibrated. Above that, events happened less often than forecast; the composite's 97% forecasts came true 60% of the time.
+- **The base rate moves.** Training on the calmer 1990s made every model under-forecast the 2000–2002 bear market. Calibration depends on the regime it was learned in.
+
+**Caveats.**
+- **Regressions:** linear logistic and linear quantile regressions only.
+- **Target:** one horizon and one drawdown threshold.
+- **Index:** the S&P 500 price index without dividends, so drawdowns are slightly deeper than total-return drawdowns.
+- **Credit data:** the Moody's series is used for research only and not redistributed.
+
+![Reliability](results/v2_reliability.png)
+![Skill by year](results/v2_skill_by_year.png)

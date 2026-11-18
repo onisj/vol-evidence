@@ -1,0 +1,405 @@
+{
+  "run_utc": "2026-11-18T22:03:45+00:00",
+  "preregistration": "research/PREREGISTRATION_V2.md",
+  "us": {
+    "data_start": "1990-01-02",
+    "oos_start": "2000-01-03",
+    "oos_end": "2026-10-20",
+    "full": {
+      "models": {
+        "M0 climatology": {
+          "days": 6740,
+          "event_rate_pct": 18.95,
+          "brier": 0.15741,
+          "mean_pinball": 0.12989,
+          "calibration_in_the_large_pp": -2.56,
+          "interval_10_90_coverage_pct": 75.1
+        },
+        "M1 VIX": {
+          "days": 6740,
+          "event_rate_pct": 18.95,
+          "brier": 0.14663,
+          "mean_pinball": 0.08444,
+          "calibration_in_the_large_pp": -2.27,
+          "interval_10_90_coverage_pct": 76.0
+        },
+        "M2 HAR": {
+          "days": 6740,
+          "event_rate_pct": 18.95,
+          "brier": 0.14538,
+          "mean_pinball": 0.09489,
+          "calibration_in_the_large_pp": -1.38,
+          "interval_10_90_coverage_pct": 74.6
+        },
+        "M3 VIX + VRP": {
+          "days": 6740,
+          "event_rate_pct": 18.95,
+          "brier": 0.14826,
+          "mean_pinball": 0.08483,
+          "calibration_in_the_large_pp": -1.86,
+          "interval_10_90_coverage_pct": 75.5
+        },
+        "M4 composite": {
+          "days": 6740,
+          "event_rate_pct": 18.95,
+          "brier": 0.1514,
+          "mean_pinball": 0.08474,
+          "calibration_in_the_large_pp": -1.49,
+          "interval_10_90_coverage_pct": 72.1
+        }
+      },
+      "M1_vs_M0": {
+        "brier": {
+          "improvement_pct": 6.85,
+          "diff_ci95": [
+            0.000958,
+            0.022482
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": 34.99,
+          "diff_ci95": [
+            0.03282,
+            0.059613
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        }
+      },
+      "M3_vs_M1": {
+        "brier": {
+          "improvement_pct": -1.11,
+          "diff_ci95": [
+            -0.00561,
+            0.001225
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        },
+        "pinball": {
+          "improvement_pct": -0.45,
+          "diff_ci95": [
+            -0.001548,
+            0.00056
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        }
+      },
+      "M4_vs_M1": {
+        "brier": {
+          "improvement_pct": -3.26,
+          "diff_ci95": [
+            -0.010532,
+            -0.000195
+          ],
+          "ci_excludes_zero": true,
+          "better": false
+        },
+        "pinball": {
+          "improvement_pct": -0.36,
+          "diff_ci95": [
+            -0.002044,
+            0.001408
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        }
+      },
+      "M2_vs_M1": {
+        "brier": {
+          "improvement_pct": 0.85,
+          "diff_ci95": [
+            -0.002157,
+            0.004544
+          ],
+          "ci_excludes_zero": false,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": -12.37,
+          "diff_ci95": [
+            -0.014561,
+            -0.00676
+          ],
+          "ci_excludes_zero": true,
+          "better": false
+        }
+      },
+      "brier_skill_vs_climatology": {
+        "M0 climatology": 0.0,
+        "M1 VIX": 0.0685,
+        "M2 HAR": 0.0764,
+        "M3 VIX + VRP": 0.0581,
+        "M4 composite": 0.0382
+      },
+      "verdicts": {
+        "H1_vix_has_skill": true,
+        "H3_vrp_adds_to_vix": false,
+        "H2_composite_beats_vix": false,
+        "H4_vix_calibrated": false
+      }
+    },
+    "unseen_2000_2007": {
+      "models": {
+        "M0 climatology": {
+          "days": 2010,
+          "event_rate_pct": 21.09,
+          "brier": 0.1764,
+          "mean_pinball": 0.12365,
+          "calibration_in_the_large_pp": -6.06,
+          "interval_10_90_coverage_pct": 73.1
+        },
+        "M1 VIX": {
+          "days": 2010,
+          "event_rate_pct": 21.09,
+          "brier": 0.16224,
+          "mean_pinball": 0.07196,
+          "calibration_in_the_large_pp": -5.83,
+          "interval_10_90_coverage_pct": 78.8
+        },
+        "M2 HAR": {
+          "days": 2010,
+          "event_rate_pct": 21.09,
+          "brier": 0.16078,
+          "mean_pinball": 0.07747,
+          "calibration_in_the_large_pp": -4.26,
+          "interval_10_90_coverage_pct": 78.1
+        },
+        "M3 VIX + VRP": {
+          "days": 2010,
+          "event_rate_pct": 21.09,
+          "brier": 0.16276,
+          "mean_pinball": 0.07205,
+          "calibration_in_the_large_pp": -5.32,
+          "interval_10_90_coverage_pct": 78.1
+        },
+        "M4 composite": {
+          "days": 2010,
+          "event_rate_pct": 21.09,
+          "brier": 0.16908,
+          "mean_pinball": 0.06945,
+          "calibration_in_the_large_pp": -5.7,
+          "interval_10_90_coverage_pct": 76.3
+        }
+      },
+      "M1_vs_M0": {
+        "brier": {
+          "improvement_pct": 8.03,
+          "diff_ci95": [
+            0.001141,
+            0.029446
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": 41.8,
+          "diff_ci95": [
+            0.034772,
+            0.070017
+          ],
+          "ci_excludes_zero": true,
+          "better": true
+        }
+      },
+      "M3_vs_M1": {
+        "brier": {
+          "improvement_pct": -0.32,
+          "diff_ci95": [
+            -0.004907,
+            0.002351
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        },
+        "pinball": {
+          "improvement_pct": -0.13,
+          "diff_ci95": [
+            -0.001297,
+            0.00077
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        }
+      },
+      "M4_vs_M1": {
+        "brier": {
+          "improvement_pct": -4.22,
+          "diff_ci95": [
+            -0.015441,
+            -0.000265
+          ],
+          "ci_excludes_zero": true,
+          "better": false
+        },
+        "pinball": {
+          "improvement_pct": 3.49,
+          "diff_ci95": [
+            -0.000618,
+            0.005955
+          ],
+          "ci_excludes_zero": false,
+          "better": true
+        }
+      },
+      "M2_vs_M1": {
+        "brier": {
+          "improvement_pct": 0.9,
+          "diff_ci95": [
+            -0.006653,
+            0.006863
+          ],
+          "ci_excludes_zero": false,
+          "better": true
+        },
+        "pinball": {
+          "improvement_pct": -7.66,
+          "diff_ci95": [
+            -0.013284,
+            0.000981
+          ],
+          "ci_excludes_zero": false,
+          "better": false
+        }
+      },
+      "brier_skill_vs_climatology": {
+        "M0 climatology": 0.0,
+        "M1 VIX": 0.0803,
+        "M2 HAR": 0.0885,
+        "M3 VIX + VRP": 0.0773,
+        "M4 composite": 0.0415
+      },
+      "verdicts": {
+        "H1_vix_has_skill": true,
+        "H3_vrp_adds_to_vix": false,
+        "H2_composite_beats_vix": false,
+        "H4_vix_calibrated": false
+      }
+    },
+    "reliability_M1": [
+      {
+        "bin": "0.0-0.1",
+        "days": 2340,
+        "mean_forecast": 0.0662,
+        "observed": 0.0885
+      },
+      {
+        "bin": "0.1-0.2",
+        "days": 2601,
+        "mean_forecast": 0.1428,
+        "observed": 0.2057
+      },
+      {
+        "bin": "0.2-0.3",
+        "days": 1000,
+        "mean_forecast": 0.2426,
+        "observed": 0.265
+      },
+      {
+        "bin": "0.3-0.4",
+        "days": 408,
+        "mean_forecast": 0.3453,
+        "observed": 0.2623
+      },
+      {
+        "bin": "0.4-0.5",
+        "days": 178,
+        "mean_forecast": 0.4414,
+        "observed": 0.2921
+      },
+      {
+        "bin": "0.5-0.6",
+        "days": 93,
+        "mean_forecast": 0.5477,
+        "observed": 0.3226
+      },
+      {
+        "bin": "0.6-0.7",
+        "days": 60,
+        "mean_forecast": 0.6452,
+        "observed": 0.7167
+      },
+      {
+        "bin": "0.7-0.8",
+        "days": 41,
+        "mean_forecast": 0.743,
+        "observed": 0.5366
+      },
+      {
+        "bin": "0.8-0.9",
+        "days": 19,
+        "mean_forecast": 0.8243,
+        "observed": 0.8421
+      }
+    ],
+    "reliability_M4": [
+      {
+        "bin": "0.0-0.1",
+        "days": 2425,
+        "mean_forecast": 0.0659,
+        "observed": 0.1113
+      },
+      {
+        "bin": "0.1-0.2",
+        "days": 2505,
+        "mean_forecast": 0.1419,
+        "observed": 0.1812
+      },
+      {
+        "bin": "0.2-0.3",
+        "days": 965,
+        "mean_forecast": 0.2433,
+        "observed": 0.2694
+      },
+      {
+        "bin": "0.3-0.4",
+        "days": 394,
+        "mean_forecast": 0.3472,
+        "observed": 0.2563
+      },
+      {
+        "bin": "0.4-0.5",
+        "days": 158,
+        "mean_forecast": 0.4426,
+        "observed": 0.3481
+      },
+      {
+        "bin": "0.5-0.6",
+        "days": 76,
+        "mean_forecast": 0.5467,
+        "observed": 0.3026
+      },
+      {
+        "bin": "0.6-0.7",
+        "days": 46,
+        "mean_forecast": 0.6651,
+        "observed": 0.587
+      },
+      {
+        "bin": "0.7-0.8",
+        "days": 56,
+        "mean_forecast": 0.7373,
+        "observed": 0.4821
+      },
+      {
+        "bin": "0.8-0.9",
+        "days": 45,
+        "mean_forecast": 0.8609,
+        "observed": 0.4
+      },
+      {
+        "bin": "0.9-1.0",
+        "days": 70,
+        "mean_forecast": 0.9685,
+        "observed": 0.6
+      }
+    ]
+  },
+  "europe": {
+    "status": "not run",
+    "reason": "only 0.0 years of overlapping data"
+  }
+}

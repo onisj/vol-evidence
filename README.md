@@ -2,12 +2,13 @@
 
 [![CI](https://github.com/onisj/vol-evidence/actions/workflows/ci.yml/badge.svg)](https://github.com/onisj/vol-evidence/actions/workflows/ci.yml)
 
-**Testing the numbers options tools show traders.** Retail options tools display implied volatility from a data feed, market "stress" or "risk-on" scores, and AI news summaries. This project checks three of those against data, with the methods, results and caveats in the open (raw vendor data is regenerated locally by the scripts, not redistributed).
+**Testing the numbers options tools show traders.** Retail options tools display implied volatility from a data feed, market "stress" or "risk-on" scores, and AI news summaries. This project checks them against data, with the methods, results and caveats in the open (raw vendor data is regenerated locally by the scripts, not redistributed).
 
 | Question | Answer | Study |
 |---|---|---|
 | Is the vendor's implied volatility consistent with the actual quote? | **Near the money, roughly; in the money, often not.** Across 15,522 contracts, vendor IV sat a median 1.1 vol points from the quote-implied IV out of the money, but 5.0 points in the money, where half were off by more than 5. Early exercise, wide quotes and stale last trades were each tested and ruled out as the main cause. | [IV audit](research/README.md#2-how-far-is-vendor-implied-volatility-from-the-quote-iv_auditpy-iv_americanpy) |
 | Does a multi-input market stress gauge beat plain VIX? | **No.** A pre-registered four-input gauge sorted next-month drawdown risk from 33.7% to 8.4%, but added nothing beyond raw VIX (t = 0.21) and ranked volatility worse (−0.44 vs −0.66). | [Stress backtest](research/README.md#1-does-a-market-stress-gauge-beat-vix-stress_backtestpy) |
+| Can next-month risk be forecast as a calibrated probability? | **Somewhat, and only with VIX.** A second pre-registered study (1990–2026, refitted yearly, 26 years out of sample) found that VIX beats the base rate, but every added input, including the variance risk premium and credit spreads, made forecasts worse. The models helped in calm years and in drawn-out bear markets, but before the sudden shocks of 2018 and 2020 all of them did worse than the base rate. | [Forecast study](research/README.md#4-can-next-month-risk-be-forecast-as-a-calibrated-probability-stress_v2py) |
 | Can an LLM news digest be made checkable? | Each event must cite numbered headlines, so grounding is verified by code and by a blind judge, with injection and empty-input probes. The harness is built and tested; the paid run is pending. | [News evaluation](research/README.md#3-is-a-cited-llm-headline-digest-grounded-and-robust-news_evalpy) |
 
 ![Stress gauge quintiles](research/results/stress_quintiles.png)
@@ -39,6 +40,7 @@ Run `iv` during US market hours: outside them many quotes are one-sided or stale
 | `market_data.py` | yfinance chains and closes, the 13-week T-bill rate converted to continuous compounding, and dividend yields with the percent-vs-fraction trap handled |
 | `iv_audit.py` | Solves IV from each two-sided quote and classifies quotes no European volatility can explain |
 | `stress.py` | The pre-registered stress gauge, as pure functions shared by the live reading and the backtest |
+| `riskforecast.py` | Features, targets, walk-forward refitting and scoring (Brier, pinball, reliability, coverage, block bootstrap) for the probability forecasts |
 | `news.py` | Headline parsing for both yfinance news formats, and a cited digest with JSON-schema structured output |
 
 ## Engineering
