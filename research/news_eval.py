@@ -180,14 +180,15 @@ def _judge_claude(prompt: str, model: str) -> tuple[dict, dict]:
     if model.startswith(news.BEDROCK_PREFIX):
         # Bedrock has no server-side refusal fallback; a refusal is reported as an error below.
         client, model_id = news._claude_client(model)
-        resp = client.messages.create(model=model_id, **common)
+        resp = news.create_json(client, model_id, JUDGE_INSTRUCTIONS, prompt, JUDGE_SCHEMA,
+                                effort="medium", max_tokens=16000)
     else:
         resp = anthropic.Anthropic().beta.messages.create(
             model=model, betas=["server-side-fallback-2026-07-01"], fallbacks="default", **common)
     if resp.stop_reason == "refusal":
         raise RuntimeError("judge declined")
     text = next(b.text for b in resp.content if b.type == "text")
-    return json.loads(text), {"input": resp.usage.input_tokens, "output": resp.usage.output_tokens}
+    return news._parse_json_object(text), {"input": resp.usage.input_tokens, "output": resp.usage.output_tokens}
 
 
 def _judge_openai(prompt: str, model: str) -> tuple[dict, dict]:

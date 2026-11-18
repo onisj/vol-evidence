@@ -147,23 +147,39 @@ def _claude_client(model: str):
     import anthropic
 
     if model.startswith(BEDROCK_PREFIX):
-        return anthropic.AnthropicBedrockMantle(
+        # Bedrock InvokeModel path (bedrock:InvokeModel permission), not the separate Mantle API.
+        return anthropic.AnthropicBedrock(
             aws_region=os.environ.get("AWS_REGION", "us-east-1"),
             aws_profile=os.environ.get("AWS_PROFILE"),
         ), model[len(BEDROCK_PREFIX):]
     return anthropic.Anthropic(), model
 
 
+def create_json(client, model: str, system: str, user: str, schema: dict, effort: str, max_tokens: int):
+    """
+    Messages call with JSON-schema structured output. If the platform rejects the
+    format parameter, retry once without it and ask for JSON in the instructions;
+    the caller still parses and the schema's required keys are checked.
+    """
+    import anthropic
+
+    kwargs = dict(model=model, max_tokens=max_tokens, messages=[{"role": "user", "content": user}])
+    try:
+        return client.messages.create(system=system, output_config={
+            "effort": effort, "format": {"type": "json_schema", "schema": schema}}, **kwargs)
+    except anthropic.BadRequestError as exc:
+        if "format" not in str(exc) and "output_config" not in str(exc):
+            raise
+        log.warning("structured output rejected (%s); retrying with JSON instructions only", exc)
+        fallback = (system + "\n\nReply with one JSON object only, no other text, matching this schema:\n"
+                    + json.dumps(schema))
+        return client.messages.create(system=fallback, **kwargs)
+
+
 def digest_claude(ticker: str, headlines: list[Headline], model: str = DEFAULT_CLAUDE_MODEL) -> tuple[dict, dict]:
     """Digest via the Anthropic SDK with JSON-schema structured output. Returns (digest, usage)."""
     client, model = _claude_client(model)
-    resp = client.messages.create(
-        model=model,
-        max_tokens=4000,
-        system=INSTRUCTIONS,
-        messages=[{"role": "user", "content": render(ticker, headlines)}],
-        output_config={"effort": "low", "format": {"type": "json_schema", "schema": SCHEMA}},
-    )
+    resp = create_json(client, model, INSTRUCTIONS, render(ticker, headlines), SCHEMA, effort="low", max_tokens=4000)
     if resp.stop_reason == "refusal":
         raise DigestError("model declined")
     if resp.stop_reason == "max_tokens":
@@ -171,7 +187,25 @@ def digest_claude(ticker: str, headlines: list[Headline], model: str = DEFAULT_C
     text = next((b.text for b in resp.content if b.type == "text"), None)
     if text is None:
         raise DigestError("no text block in reply")
-    return json.loads(text), {"input": resp.usage.input_tokens, "output": resp.usage.output_tokens}
+    result = _parse_json_object(text)
+    missing = set(SCHEMA["required"]) - set(result)
+    if missing:
+        raise DigestError(f"reply missing fields: {sorted(missing)}")
+    return result, {"input": resp.usage.input_tokens, "output": resp.usage.output_tokens}
+
+
+def _parse_json_object(text: str) -> dict:
+    """Parse a JSON object, tolerating code fences or stray text around it."""
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        start, end = text.find("{"), text.rfind("}")
+        if start == -1 or end <= start:
+            raise DigestError("reply is not JSON") from None
+        try:
+            return json.loads(text[start:end + 1])
+        except json.JSONDecodeError as exc:
+            raise DigestError(f"reply is not valid JSON: {exc}") from None
 
 
 def digest_openai(ticker: str, headlines: list[Headline], model: str = DEFAULT_OPENAI_MODEL) -> tuple[dict, dict]:

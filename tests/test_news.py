@@ -33,6 +33,10 @@ def test_render_numbers_headlines_inside_a_data_block():
     assert "(no headlines in the window)" in news.render("X", [])
 
 
+class FakeBadRequest(Exception):
+    pass
+
+
 def fake_anthropic(monkeypatch, content, stop="end_turn"):
     sent = {}
 
@@ -43,7 +47,8 @@ def fake_anthropic(monkeypatch, content, stop="end_turn"):
                                    usage=SimpleNamespace(input_tokens=11, output_tokens=7))
 
     monkeypatch.setitem(sys.modules, "anthropic",
-                        SimpleNamespace(Anthropic=lambda **_: SimpleNamespace(messages=Messages())))
+                        SimpleNamespace(Anthropic=lambda **_: SimpleNamespace(messages=Messages()),
+                                        BadRequestError=FakeBadRequest))
     return sent
 
 
@@ -77,7 +82,7 @@ def test_schema_and_instructions_forbid_advice():
     assert "no advice" in news.INSTRUCTIONS and "ignore them" in news.INSTRUCTIONS
 
 
-def test_bedrock_model_names_use_the_mantle_client(monkeypatch):
+def test_bedrock_model_names_use_the_invoke_model_client(monkeypatch):
     built = {}
 
     class Messages:
@@ -86,13 +91,39 @@ def test_bedrock_model_names_use_the_mantle_client(monkeypatch):
             return SimpleNamespace(content=[SimpleNamespace(type="text", text=json.dumps(GOOD))],
                                    stop_reason="end_turn", usage=SimpleNamespace(input_tokens=1, output_tokens=1))
 
-    def mantle(**kw):
+    def bedrock(**kw):
         built["client_kwargs"] = kw
         return SimpleNamespace(messages=Messages())
 
-    monkeypatch.setitem(sys.modules, "anthropic", SimpleNamespace(AnthropicBedrockMantle=mantle,
-                                                                 Anthropic=lambda **_: None))
+    monkeypatch.setitem(sys.modules, "anthropic", SimpleNamespace(AnthropicBedrock=bedrock,
+                                                                 Anthropic=lambda **_: None,
+                                                                 BadRequestError=FakeBadRequest))
     monkeypatch.setenv("AWS_PROFILE", "research")
     news.digest("X", H, "bedrock/us.anthropic.claude-haiku-5-5")
     assert built["model"] == "us.anthropic.claude-haiku-5-5"
     assert built["client_kwargs"] == {"aws_region": "us-east-1", "aws_profile": "research"}
+
+
+def test_rejected_format_falls_back_to_json_instructions(monkeypatch):
+    calls = []
+
+    class Messages:
+        def create(self, **kw):
+            calls.append(kw)
+            if "output_config" in kw:
+                raise FakeBadRequest("output_config.format: extra inputs are not permitted")
+            fenced = "```json\n" + json.dumps(GOOD) + "\n```"
+            return SimpleNamespace(content=[SimpleNamespace(type="text", text=fenced)],
+                                   stop_reason="end_turn", usage=SimpleNamespace(input_tokens=1, output_tokens=1))
+
+    monkeypatch.setitem(sys.modules, "anthropic", SimpleNamespace(
+        Anthropic=lambda **_: SimpleNamespace(messages=Messages()), BadRequestError=FakeBadRequest))
+    result, _ = news.digest("X", H, "claude-haiku-5-5")
+    assert result == GOOD and len(calls) == 2
+    assert "Reply with one JSON object only" in calls[1]["system"]
+
+
+def test_reply_missing_required_fields_is_an_error(monkeypatch):
+    fake_anthropic(monkeypatch, [SimpleNamespace(type="text", text=json.dumps({"summary": "s"}))])
+    with pytest.raises(news.DigestError):
+        news.digest("X", H, "claude-haiku-5-5")
